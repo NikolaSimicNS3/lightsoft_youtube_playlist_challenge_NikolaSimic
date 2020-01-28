@@ -146,7 +146,7 @@ public class Main {
 				if (current == -99) {
 					System.out.println("no video");
 				} else {
-					System.out.println("Now playing " + my.get(current).getTitle() + "  " + my.get(current).getLength());
+					System.out.println("Now replaying " + my.get(current).getTitle() + "  " + my.get(current).getLength());
 				}
 				System.out.println("****************");
 				break;
