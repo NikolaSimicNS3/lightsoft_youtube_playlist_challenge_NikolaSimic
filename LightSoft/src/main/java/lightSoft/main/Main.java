@@ -17,23 +17,18 @@ public class Main {
 
 		List<Video> my = new ArrayList<Video>();
 
-		Video current = null;
+		int current = -99;
 
-		int o=1;
+		int o = 1;
 
 		Scanner s = new Scanner(System.in);
 
 		while (o != 0) {
-			o=9;
-			String err= s.next();
-			try {
-				int br = Integer.parseInt(err);
-				o=br;
-			} catch (Exception e) {
-				System.out.println("unesite broj");
-			}
-			
 
+			
+			// treba osigurati da program ne pukne ako se ne unese broj;
+			o = s.nextInt();
+			
 			switch (o) {
 			case 0:
 				System.out.println("Youtube shutingdown..");
@@ -60,6 +55,7 @@ public class Main {
 				}
 				c.kanal(channels, name);
 				System.out.println("****************");
+				o = 9;
 				break;
 			case 3:
 				System.out.println("****************");
@@ -77,18 +73,29 @@ public class Main {
 				System.out.println("****************");
 				System.out.println("Video:");
 				String vid = null;
-				
-				while (vid == null ) {
-					vid= s.next();
+
+				while (vid == null || vid.equals("")) {
+					vid = s.nextLine();
 				}
-				
+
 				boolean ok = true;
 				for (YoutubeChannel y : channels) {
 					for (Video v : y.getVideos()) {
 						if (v.getTitle().equalsIgnoreCase(vid)) {
-							my.add(v);
-							System.out.println("video has been added");
-							ok = false;
+							boolean ex = true;
+							for (Video m : my) {
+								if (m.getTitle().equalsIgnoreCase(vid)) {
+									System.out.println("Video is in the playlist");
+									ex = false;
+									ok=false;
+								}
+							}
+							if (ex) {
+								my.add(v);
+
+								System.out.println("video has been added");
+								ok = false;
+							}
 						}
 					}
 				}
@@ -96,69 +103,64 @@ public class Main {
 					System.out.println("video doesnt exist");
 				}
 				System.out.println("****************");
+				o = 9;
 				break;
 			case 5:
 				System.out.println("****************");
-				if (current == null) {
+				if (current == -99) {
 					if (my.size() > 0) {
-						current = my.get(0);
-						System.out.println("Now playing " + current.getTitle() + "  " + current.getLength());
+						current = 0;
+						System.out.println("Now playing " + my.get(current).getTitle() + "  " + my.get(current).getLength());
 					} else {
 						System.out.println("no video in list");
 					}
 				} else {
-					int i = my.indexOf(current);
-					i += 1;
-					if (i > my.size()) {
+					current++;
+
+					if (current > my.size()-1) {
 						// ako je na kraju liste, sledeci video je prvi video iz liste (krece listu iz
 						// pocetka)
-						i = 0;
+						current = 0;
 					}
-					
-					System.out.println("Now playing " + current.getTitle() + "  " + current.getLength());
+
+					System.out.println("Now playing " + my.get(current).getTitle() + "  " + my.get(current).getLength());
 				}
 				System.out.println("****************");
 				break;
 			case 6:
 				System.out.println("****************");
-				if (current == null) {
-						System.out.println("There is no privus video");
-					
+				if (current < 1) {
+					System.out.println("There is no privus video");
+
 				} else {
-					int i = my.indexOf(current);
-					i -= 1;
-					if (i == -1) {
-						// ako je na kraju liste, sledeci video je prvi video iz liste (krece listu iz
-						// pocetka)
-						System.out.println("There is no privus video");
-					}
-					else {
-						System.out.println("Now playing " + current.getTitle() + "  " + current.getLength());
-					}
-					
+					current--;
+
+					System.out.println("Now playing " + my.get(current).getTitle() + "  " + my.get(current).getLength());
+
 				}
 				System.out.println("****************");
 				break;
 			case 7:
 				System.out.println("****************");
-				if (current == null) {
+
+				if (current == -99) {
 					System.out.println("no video");
 				} else {
-					System.out.println("Now playing " + current.getTitle() + "  " + current.getLength());
+					System.out.println("Now playing " + my.get(current).getTitle() + "  " + my.get(current).getLength());
 				}
 				System.out.println("****************");
 				break;
 			case 8:
-				if (current==null) {
+				if (current == -99) {
 					System.out.println(" no selected video to delete");
-				}else {
+				} else {
 					my.remove(current);
-					current= null;
+					current = -99;
 					System.out.println("Video has been deleted");
 				}
 				break;
 			case 9:
-				// code block
+				System.out.println("Unesite broj");
 				break;
 			default:
 				// code block
